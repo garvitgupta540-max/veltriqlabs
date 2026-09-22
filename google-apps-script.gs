@@ -1,4 +1,4 @@
-const SHEET_NAME = 'Consultations'
+const SPREADSHEET_ID = '1WFRY8jTmAe4cxlXxoS0Q6eWS6Ppyonq1sclxkkN0yNQ'
 const GEMINI_API_KEY = PropertiesService.getScriptProperties().getProperty('GEMINI_API_KEY')
 
 function generateAiSummary(service, stage, brief) {
@@ -40,17 +40,20 @@ function generateAiSummary(service, stage, brief) {
 }
 
 function doPost(event) {
-  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_NAME) || SpreadsheetApp.getActiveSpreadsheet().insertSheet(SHEET_NAME)
+  const spreadsheet = SpreadsheetApp.openById(SPREADSHEET_ID)
+  const sheet = spreadsheet.getSheets()[0]
   const data = JSON.parse(event.postData.contents)
 
   if (sheet.getLastRow() === 0) {
-    sheet.appendRow(['Received', 'Service', 'Project stage', 'Brief', 'Source', 'AI Summary'])
+    sheet.appendRow(['Received', 'Name', 'Mobile', 'Service', 'Project stage', 'Brief', 'Source', 'AI Summary'])
   }
 
   const aiSummary = generateAiSummary(data.service || '', data.stage || '', data.brief || '')
 
   sheet.appendRow([
     new Date(),
+    data.name || '',
+    data.mobile || data.mobileNumber || data.phone || '',
     data.service || '',
     data.stage || '',
     data.brief || '',
