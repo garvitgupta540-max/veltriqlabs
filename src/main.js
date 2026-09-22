@@ -1,6 +1,6 @@
 import './style.css'
 
-const GOOGLE_SHEETS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxBfQqCkz_7JJyZw5y43n1CepJA0B8Dr3oEp5id2cFpxhuyPGUbrxjgI9AwHBp6M2pi/exec'
+const GOOGLE_SHEETS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbylSF8RBzYmgfxs-Icny6iiIxty0uyPPGsdnBO1k7KMg-Jrsnj-EkQrsne_173z-osDWg/exec'
 
 document.querySelector('#app').innerHTML = `
 <main>
@@ -45,9 +45,9 @@ document.querySelector('#app').innerHTML = `
 
   <section class="statement shell" id="approach"><div class="statement-mark">✳</div><p>“The best technology doesn’t announce itself. It simply gives people <em>more agency.</em>”</p><span class="statement-caption">Our working belief</span></section>
 
-  <section class="consult shell" id="consult"><div class="consult-heading"><p class="eyebrow">Start with a signal</p><h2>Make the first<br><em>conversation useful.</em></h2><p>Share the shape of the challenge. We will come prepared with a point of view, not a sales script.</p><div class="consult-meta"><span>01 / LISTEN</span><span>02 / MAP</span><span>03 / MOVE</span></div></div><form class="consult-form" id="consult-form"><div class="form-topline"><span>CONSULTATION INTAKE</span><span>~ 3 MIN</span></div><label>What do you need help with?</label><div class="choice-grid"><button type="button" class="choice is-selected" data-value="Product strategy">Product strategy</button><button type="button" class="choice" data-value="Digital systems">Digital systems</button><button type="button" class="choice" data-value="AI / automation">AI / automation</button><button type="button" class="choice" data-value="Something else">Something else</button></div><label for="project-stage">Where are you in the journey?</label><select id="project-stage"><option>Exploring an idea</option><option>Building the first version</option><option>Scaling an existing product</option><option>Reworking what is not working</option></select><label for="project-brief">Give us the short version</label><textarea id="project-brief" rows="3" placeholder="The problem we are trying to solve is..."></textarea><button class="button button-accent form-submit" type="submit">Request a consultation <span>↗</span></button><p class="form-note">Replies come directly from Garvit Gupta.</p></form></section>
+  <section class="consult shell" id="consult"><div class="consult-heading"><p class="eyebrow">Start with a signal</p><h2>Make the first<br><em>conversation useful.</em></h2><p>Share the shape of the challenge. We will come prepared with a point of view, not a sales script.</p><div class="consult-meta"><span>01 / LISTEN</span><span>02 / MAP</span><span>03 / MOVE</span></div></div><form class="consult-form" id="consult-form"><div class="form-topline"><span>CONSULTATION INTAKE</span><span>~ 3 MIN</span></div><label for="contact-name">Your name</label><input id="contact-name" name="name" type="text" autocomplete="name" placeholder="Your full name" required><label for="contact-mobile">Mobile number</label><input id="contact-mobile" name="mobile" type="tel" autocomplete="tel" inputmode="numeric" pattern="[0-9]{10}" minlength="10" maxlength="10" title="Enter a 10-digit mobile number" placeholder="98765 43210" required><label>What do you need help with?</label><div class="choice-grid"><button type="button" class="choice is-selected" data-value="Product strategy">Product strategy</button><button type="button" class="choice" data-value="Digital systems">Digital systems</button><button type="button" class="choice" data-value="AI / automation">AI / automation</button><button type="button" class="choice" data-value="Something else">Something else</button></div><label for="project-stage">Where are you in the journey?</label><select id="project-stage"><option>Exploring an idea</option><option>Building the first version</option><option>Scaling an existing product</option><option>Reworking what is not working</option></select><label for="project-brief">Give us the short version</label><textarea id="project-brief" rows="3" placeholder="The problem we are trying to solve is..."></textarea><button class="button button-accent form-submit" type="submit">Request a consultation <span>↗</span></button><p class="form-note">Replies come directly from Garvit Gupta.</p></form></section>
 
-  <section class="contact shell" id="contact"><div><p class="eyebrow">Have a good problem?</p><h2>Let’s make it<br><em>worth solving.</em></h2></div><div class="contact-side"><p>Tell us where you are, where you want to go, and what’s getting in the way. We’ll bring the first useful question.</p><div class="founder-line"><span>Founder</span><strong>Garvit Gupta</strong><span>Jaipur, India</span></div><a class="button button-light" href="https://mail.google.com/mail/?view=cm&fs=1&to=GarvitGupta2110@gmail.com" target="_blank" rel="noopener noreferrer">GarvitGupta2110@gmail.com <span>↗</span></a></div></section>
+  <section class="contact shell" id="contact"><div><p class="eyebrow">Have a good problem?</p><h2>Let’s make it<br><em>worth solving.</em></h2></div><div class="contact-side"><p>Tell us where you are, where you want to go, and what’s getting in the way. We’ll bring the first useful question.</p><div class="founder-line"><span>Founders</span><strong>Garvit Gupta</strong><strong>Dhruv Gupta</strong><span>Jaipur, India</span></div><a class="button button-light" href="https://mail.google.com/mail/?view=cm&fs=1&to=GarvitGupta2110@gmail.com" target="_blank" rel="noopener noreferrer">GarvitGupta2110@gmail.com <span>↗</span></a></div></section>
 
   <footer class="footer shell"><a class="brand brand-image-link" href="#top"><img class="brand-logo" src="/veltriqlabs-logo.png" alt="Veltriqlabs logo" /></a><span>Garvit Gupta · Jaipur, India</span><span><a href="/privacy.html">Privacy</a> · <a href="/terms.html">Terms</a> · © 2026</span></footer>
 </main>
@@ -103,9 +103,15 @@ document.querySelectorAll('.choice').forEach((choice) => {
 consultationForm.addEventListener('submit', async (event) => {
   event.preventDefault()
 
+  const name = document.querySelector('#contact-name').value.trim()
+  const mobile = document.querySelector('#contact-mobile').value.trim()
   const stage = document.querySelector('#project-stage').value
   const brief = document.querySelector('#project-brief').value || 'I would like to discuss a technology project.'
   const payload = {
+    name,
+    mobile,
+    mobileNumber: mobile,
+    phone: mobile,
     service: selectedConsultation,
     stage,
     brief,
@@ -134,7 +140,7 @@ consultationForm.addEventListener('submit', async (event) => {
 
     const result = response.type === 'opaque' ? { ok: true } : await response.json().catch(() => ({}))
     if (result.ok) {
-      const whatsappMessage = encodeURIComponent(`Hi, I want to discuss: ${selectedConsultation}\nProject stage: ${stage}\n\n${brief}`)
+      const whatsappMessage = encodeURIComponent(`Hi, I want to discuss: ${selectedConsultation}\nName: ${name}\nMobile: ${mobile}\nProject stage: ${stage}\n\n${brief}`)
       window.open(`https://wa.me/919784629082?text=${whatsappMessage}`, '_blank', 'noopener')
 
       submitButton.textContent = 'Request sent'
