@@ -1,6 +1,6 @@
 import './style.css'
 
-const GOOGLE_SHEETS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyKMPxXKt9OleGEyIks-9Hmv3icgOXRPjBScJAJWlcqDV0_2oqZkFdSZYjXs9xV7M_heQ/exec'
+const GOOGLE_SHEETS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyapxSuRGWPHpJoYQExYIkoDjLExE5tGbxI6tkReCXDX3EVpvnDQoDLjbrkn7trNnI3GQ/exec'
 
 document.querySelector('#app').innerHTML = `
 <main>
