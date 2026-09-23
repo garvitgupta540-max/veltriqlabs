@@ -1,5 +1,22 @@
 const SPREADSHEET_ID = '1WFRY8jTmAe4cxlXxoS0Q6eWS6Ppyonq1sclxkkN0yNQ'
 const GEMINI_API_KEY = PropertiesService.getScriptProperties().getProperty('GEMINI_API_KEY')
+const SHEET_HEADERS = ['Received', 'Name', 'Mobile', 'Service', 'Project stage', 'Brief', 'Source', 'AI Summary']
+
+function doGet() {
+  return ContentService
+    .createTextOutput(JSON.stringify({ ok: true, connection: 'Veltriqlabs leads' }))
+    .setMimeType(ContentService.MimeType.JSON)
+}
+
+function getLeadSheet() {
+  const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheets()[0]
+
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow(SHEET_HEADERS)
+  }
+
+  return sheet
+}
 
 function generateAiSummary(service, stage, brief) {
   if (!GEMINI_API_KEY) {
@@ -40,20 +57,23 @@ function generateAiSummary(service, stage, brief) {
 }
 
 function doPost(event) {
-  const spreadsheet = SpreadsheetApp.openById(SPREADSHEET_ID)
-  const sheet = spreadsheet.getSheets()[0]
+  const sheet = getLeadSheet()
   const data = JSON.parse(event.postData.contents)
+  const name = String(data.name || '').trim()
+  const mobile = String(data.mobile || data.mobileNumber || data.phone || '').trim()
 
-  if (sheet.getLastRow() === 0) {
-    sheet.appendRow(['Received', 'Name', 'Mobile', 'Service', 'Project stage', 'Brief', 'Source', 'AI Summary'])
+  if (!name || !mobile) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ ok: false, error: 'Name and mobile are required.' }))
+      .setMimeType(ContentService.MimeType.JSON)
   }
 
   const aiSummary = generateAiSummary(data.service || '', data.stage || '', data.brief || '')
 
   sheet.appendRow([
     new Date(),
-    data.name || '',
-    data.mobile || data.mobileNumber || data.phone || '',
+    name,
+    mobile,
     data.service || '',
     data.stage || '',
     data.brief || '',
