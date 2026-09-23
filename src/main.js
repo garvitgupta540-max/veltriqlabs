@@ -1,6 +1,6 @@
 import './style.css'
 
-const GOOGLE_SHEETS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbz8MYtO5LfgEWJZ8tOqvFcqqygxjq_y7IOarUE_tg7p-JMSpCkthXAQnRTRucERH-AfKQ/exec'
+const GOOGLE_SHEETS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxVQRYukC2iWW2pKj1iK8VOqjzxEmIhG0jO4YnezERY5D3JCzlnzPhTuViOlPB0u6qE/exec'
 
 document.querySelector('#app').innerHTML = `
 <main>
@@ -110,8 +110,6 @@ consultationForm.addEventListener('submit', async (event) => {
   const payload = {
     name,
     mobile,
-    mobileNumber: mobile,
-    phone: mobile,
     service: selectedConsultation,
     stage,
     brief,
@@ -120,13 +118,9 @@ consultationForm.addEventListener('submit', async (event) => {
 
   const submitButton = consultationForm.querySelector('.form-submit')
   submitButton.disabled = true
-  submitButton.textContent = 'Sending...'
+  submitButton.textContent = 'Saving request...'
 
   try {
-    if (!GOOGLE_SHEETS_WEB_APP_URL) {
-      throw new Error('Google Apps Script URL is missing.')
-    }
-
     const response = await fetch(GOOGLE_SHEETS_WEB_APP_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -139,23 +133,23 @@ consultationForm.addEventListener('submit', async (event) => {
     }
 
     const result = await response.json().catch(() => ({ ok: true }))
-    if (result.ok) {
-      const whatsappMessage = encodeURIComponent(`Hi, I want to discuss: ${selectedConsultation}\nName: ${name}\nMobile: ${mobile}\nProject stage: ${stage}\n\n${brief}`)
-      window.open(`https://wa.me/919784629082?text=${whatsappMessage}`, '_blank', 'noopener')
-
-      submitButton.textContent = 'Request sent'
-      consultationForm.reset()
-      document.querySelectorAll('.choice').forEach((item) => item.classList.remove('is-selected'))
-      document.querySelector('.choice[data-value="Product strategy"]').classList.add('is-selected')
-      selectedConsultation = 'Product strategy'
-      submitButton.disabled = false
-    } else {
-      throw new Error('Script rejected the submission.')
+    if (!result.ok) {
+      throw new Error('Google Sheet rejected the submission.')
     }
+
+    const whatsappMessage = encodeURIComponent(`Hi, I want to discuss: ${selectedConsultation}\nName: ${name}\nMobile: ${mobile}\nProject stage: ${stage}\n\n${brief}`)
+    window.open(`https://wa.me/919784629082?text=${whatsappMessage}`, '_blank', 'noopener')
+
+    submitButton.textContent = 'Request sent'
+    consultationForm.reset()
+    document.querySelectorAll('.choice').forEach((item) => item.classList.remove('is-selected'))
+    document.querySelector('.choice[data-value="Product strategy"]').classList.add('is-selected')
+    selectedConsultation = 'Product strategy'
   } catch (error) {
     console.error(error)
-    submitButton.disabled = false
     submitButton.textContent = 'Request a consultation'
     alert('There was a problem sending your request. Please try again.')
+  } finally {
+    submitButton.disabled = false
   }
 })
