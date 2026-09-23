@@ -1,6 +1,6 @@
 import './style.css'
 
-const GOOGLE_SHEETS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbx0eO5MAWkp2324BqVi5CfgOzAQO3aFO0SgZD4WH0M0Yu54eo9xEITU2CnVWjV80tdZQA/exec'
+const GOOGLE_SHEETS_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxVk6JGVFysS7Ts8eSzGzPgnZ5tBXIOxXpSZWMYYr7i71Uvq1eN5mqlR2oU_-Kuy_4Q/exec'
 
 document.querySelector('#app').innerHTML = `
 <main>
@@ -131,14 +131,14 @@ consultationForm.addEventListener('submit', async (event) => {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify(payload),
-      mode: 'no-cors'
+      redirect: 'follow'
     })
 
-    if (!response.ok && response.type !== 'opaque') {
+    if (!response.ok) {
       throw new Error(`Submission failed with status ${response.status}`)
     }
 
-    const result = response.type === 'opaque' ? { ok: true } : await response.json().catch(() => ({}))
+    const result = await response.json().catch(() => ({ ok: true }))
     if (result.ok) {
       const whatsappMessage = encodeURIComponent(`Hi, I want to discuss: ${selectedConsultation}\nName: ${name}\nMobile: ${mobile}\nProject stage: ${stage}\n\n${brief}`)
       window.open(`https://wa.me/919784629082?text=${whatsappMessage}`, '_blank', 'noopener')
