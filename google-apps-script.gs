@@ -1,4 +1,4 @@
-const SPREADSHEET_ID = '1WFRY8jTmAe4cxlXxoS0Q6eWS6Ppyonq1sclxkkN0yNQ'
+const SPREADSHEET_ID = '1vKi-rCx82XhvXF1_KKHcPGNuNYYA8Df76w5TFcmPYNU'
 const GEMINI_API_KEY = PropertiesService.getScriptProperties().getProperty('GEMINI_API_KEY')
 const SHEET_HEADERS = ['Received', 'Name', 'Mobile', 'Service', 'Project stage', 'Brief', 'Source', 'AI Summary']
 
